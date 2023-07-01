@@ -3,7 +3,7 @@ name: PlatformIO CI
 on: [push]
 
 jobs:
-  build:
+  build-calibration:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,6 +24,30 @@ jobs:
         run: |
           cd calibration
           pio run
+      
+      - name: Build Firmware
+        env:
+            ROS_DISTRO: humble
+        run: |
+          cd firmware
+          pio run
+
+  build-firmware:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
       
       - name: Build Firmware
         env:
