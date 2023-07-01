@@ -26,6 +26,8 @@ jobs:
           pio run
       
       - name: Build Firmware
+        env:
+            ROS_DISTRO: humble
         run: |
           cd firmware
           pio run
