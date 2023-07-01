@@ -24,13 +24,6 @@ jobs:
         run: |
           cd calibration
           pio run
-      
-      - name: Build Firmware
-        env:
-            ROS_DISTRO: humble
-        run: |
-          cd firmware
-          pio run
 
   build-firmware:
     runs-on: ubuntu-latest
