@@ -33,6 +33,7 @@
 // #define USE_MPU6050_IMU
 // #define USE_MPU9150_IMU
 // #define USE_MPU9250_IMU
+#define USE_FAKE_IMU
 
 #define K_P 0.6                             // P constant
 #define K_I 0.8                             // I constant
@@ -52,10 +53,10 @@ ROBOT ORIENTATION
 #define MOTOR_OPERATING_VOLTAGE 12          // motor's operating voltage (used to calculate max RPM)
 #define MOTOR_POWER_MAX_VOLTAGE 12.2          // max voltage of the motor's power source (used to calculate max RPM)
 #define MOTOR_POWER_MEASURED_VOLTAGE 12     // current voltage reading of the power connected to the motor (used for calibration)
-#define COUNTS_PER_REV1 2746              // wheel1 encoder's no of ticks per rev // NOTE may be 11
-#define COUNTS_PER_REV2 2700              // wheel2 encoder's no of ticks per rev
-#define COUNTS_PER_REV3 2735              // wheel3 encoder's no of ticks per rev
-#define COUNTS_PER_REV4 2619              // wheel4 encoder's no of ticks per rev
+#define COUNTS_PER_REV1 2750              // wheel1 encoder's no of ticks per rev // NOTE may be 11
+#define COUNTS_PER_REV2 2734              // wheel2 encoder's no of ticks per rev
+#define COUNTS_PER_REV3 2821              // wheel3 encoder's no of ticks per rev
+#define COUNTS_PER_REV4 2686              // wheel4 encoder's no of ticks per rev
 #define WHEEL_DIAMETER 0.066                // wheel's diameter in meters
 #define LR_WHEELS_DISTANCE 0.156            // distance between left and right wheels
 #define PWM_BITS 10                          // PWM Resolution of the microcontroller
