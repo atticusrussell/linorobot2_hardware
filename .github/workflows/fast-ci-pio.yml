@@ -26,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build Firmware - ${{ matrix.env }}
     strategy:
+      fail-fast: false
       matrix:
         include: ${{fromJson(needs.pio-fw-matrix.outputs.matrix)}}
 
