@@ -47,6 +47,10 @@ jobs:
           python3 -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/master/scripts/get-platformio.py)"
           echo "PATH=\"\$PATH:\$HOME/.platformio/penv/bin\"" >> $HOME/.bashrc
           source $HOME/.bashrc
+
+      - name: Install required pip packages
+        run: |
+          pip install catkin_pkg
       
       - name: Build Firmware
         env:
