@@ -61,4 +61,4 @@ jobs:
             ROS_DISTRO: humble
         run: |
           cd firmware
-          pio run -e ${{ matrix.env }} --build-flags "${{ matrix.build_flags }}"
+          pio run -e ${{ matrix.env }} ${{ matrix.build_flags }}
