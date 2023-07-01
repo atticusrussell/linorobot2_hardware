@@ -1,4 +1,4 @@
-name: Parallel PlatformIO CI
+name: PlatformIO CI
 
 on:
   push:
@@ -6,7 +6,32 @@ on:
   workflow_dispatch:
     
 jobs:
+  build-calibration:
+    name: Build Calibration
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+
+      - name: Build Calibration
+        run: |
+          cd calibration
+          pio run
+
+
   pio-fw-matrix:
+    name: Parse firmware/platformio.ini
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -27,7 +52,7 @@ jobs:
   build-firmware:
     needs: pio-fw-matrix
     runs-on: ubuntu-latest
-    name: Build Firmware - ${{ matrix.env }}
+    name: ${{ matrix.env }} FW Build
     strategy:
       fail-fast: false
       matrix:
