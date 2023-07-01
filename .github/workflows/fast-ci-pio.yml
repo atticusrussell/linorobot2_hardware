@@ -22,7 +22,7 @@ jobs:
       - name: Parse platformio.ini
         id: set-matrix
         run: |
-          echo "::set-output name=matrix::$(python .github/parse_platformio.py)"
+          echo "matrix=$(python .github/parse_platformio.py)" >> $GITHUB_OUTPUT
 
   build-firmware:
     needs: pio-fw-matrix
