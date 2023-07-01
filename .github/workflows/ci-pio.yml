@@ -1,6 +1,12 @@
 name: PlatformIO CI
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    # HACK to mess with other ci jobs without triggering this one
+    paths-ignore:
+      - '.github/workflows/**'
+  pull_request: 
+  workflow_dispatch:
 
 jobs:
   build-calibration:
