@@ -52,6 +52,8 @@ jobs:
         run: |
           source $HOME/.platformio/penv/bin/activate
           pip install --upgrade catkin_pkg
+          pip uninstall em
+          pip install empty
       
       - name: Build Firmware
         env:
