@@ -52,10 +52,11 @@ jobs:
   build-firmware:
     needs: pio-fw-matrix
     runs-on: ubuntu-latest
-    name: ${{ matrix.env }} FW Build
+    name: Build ${{ matrix.env }} Firmware with ROS ${{ matrix.ros_distro }} 
     strategy:
       fail-fast: false
       matrix:
+        ros_distro: [rolling, iron, humble]
         include: ${{fromJson(needs.pio-fw-matrix.outputs.matrix)}}
 
     steps:
@@ -87,7 +88,7 @@ jobs:
 
       - name: Build Firmware
         env:
-            ROS_DISTRO: humble
+            ROS_DISTRO: ${{ matrix.ros_distro }}
         run: |
           cd firmware
           pio run -e ${{ matrix.env }}
