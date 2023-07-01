@@ -65,6 +65,4 @@ jobs:
       - name: Debug names
         run: |
           cd firmware
-          echo pio run -e ${{ matrix.env }} ${{ matrix.build_flags }}
-          echo pio run -e "${{ matrix.env }} ${{ matrix.build_flags }}"
-          echo pio run -e ${{ matrix.env }} "${{ matrix.build_flags }}"
+          echo "pio run -e "${{ matrix.env }} ${{ matrix.build_flags }}""
