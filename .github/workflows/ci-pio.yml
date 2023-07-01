@@ -50,7 +50,8 @@ jobs:
 
       - name: Install required pip packages
         run: |
-          pip install catkin_pkg
+          source $HOME/.platformio/penv/bin/activate
+          pip install --upgrade catkin_pkg
       
       - name: Build Firmware
         env:
