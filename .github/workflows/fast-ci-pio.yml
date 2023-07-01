@@ -2,9 +2,6 @@ name: Parallel PlatformIO CI
 
 on:
   push:
-    # HACK to mess with other ci jobs without triggering this one
-    paths-ignore:
-      - '.github/workflows/**'
   pull_request: 
   workflow_dispatch:
     
@@ -68,4 +65,4 @@ jobs:
             ROS_DISTRO: humble
         run: |
           cd firmware
-          pio run -e ${{ matrix.env }} ${{ matrix.build_flags }}
+          pio run -e "${{ matrix.env }} ${{ matrix.build_flags }}"
