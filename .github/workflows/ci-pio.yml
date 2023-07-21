@@ -57,7 +57,7 @@ jobs:
       - name: Parse platformio.ini
         id: set-matrix
         run: |
-          echo "matrix=$(python .github/parse_platformio.py)" >> $GITHUB_OUTPUT
+          echo "matrix=$(python .github/parse_platformio.py 'rolling humble')" >> $GITHUB_OUTPUT
 
 
   # This job builds the firmware for each environment parsed from the platformio.ini file
@@ -72,7 +72,6 @@ jobs:
       # Build the firmware for each environment from parsing job in parallel
       matrix:
         include: ${{fromJson(needs.pio-fw-matrix.outputs.matrix)}}
-        ros_distro: ['rolling', 'humble']
 
     steps:
       # Check out the repository
