@@ -1,13 +1,20 @@
-name: PlatformIO CI
+name: Reusable PlatformIO CI
 
 # Controls when this action will run.
 on:
-  push:
-  pull_request: 
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ros_distro:
+        description: 'ROS_DISTRO variable'
+        required: true
+        type: string
 
-env:
-  ROS_DISTRO_LIST: 'rolling,iron,humble,foxy,galactic'
+      repo_reference:
+        description: 'Branch or tag of repo to checkout for build.'
+        default: ''
+        required: false
+        type: string
+
     
 jobs:
   # This job is used to build the calibration firmware
@@ -18,6 +25,8 @@ jobs:
     steps:
       # Check out the repository
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.repo_reference }}
 
       # Cache dependencies to speed up workflows
       - uses: actions/cache@v3
@@ -50,6 +59,8 @@ jobs:
     steps:
       # check out the repository
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.repo_reference }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -61,7 +72,7 @@ jobs:
       - name: Parse platformio.ini
         id: set-matrix
         run: |
-          echo "matrix=$(python .github/parse_platformio.py ${{ env.ROS_DISTRO_LIST }})" >> $GITHUB_OUTPUT
+          echo "matrix=$(python .github/parse_platformio.py)" >> $GITHUB_OUTPUT
 
 
   # This job builds the firmware for each environment parsed from the platformio.ini file
@@ -69,7 +80,7 @@ jobs:
     # require the pio-fw-matrix job to complete before running
     needs: pio-fw-matrix
     runs-on: ubuntu-latest
-    name: Build ${{ matrix.env }} firmware on ${{ matrix.ros_distro }}
+    name: Build ${{ matrix.env }} firmware on ROS ${{ inputs.ros_distro }}
     strategy:
       # don't stop all jobs if one fails
       fail-fast: false
@@ -80,6 +91,8 @@ jobs:
     steps:
       # Check out the repository
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.repo_reference }}
 
       # speed up workflows by caching dependencies
       - uses: actions/cache@v3
@@ -114,7 +127,7 @@ jobs:
       # Build the firmware for each environment in parallel
       - name: Build Firmware
         env:
-            ROS_DISTRO: ${{ matrix.ros_distro }}
+          ROS_DISTRO: ${{ inputs.ros_distro }}
         run: |
           cd firmware
           pio run -e ${{ matrix.env }}
