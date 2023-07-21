@@ -57,7 +57,7 @@ jobs:
       - name: Parse platformio.ini
         id: set-matrix
         run: |
-          echo "matrix=$(python .github/parse_platformio.py 'rolling humble')" >> $GITHUB_OUTPUT
+          echo "matrix=$(python .github/parse_platformio.py 'rolling' 'humble')" >> $GITHUB_OUTPUT
 
 
   # This job builds the firmware for each environment parsed from the platformio.ini file
