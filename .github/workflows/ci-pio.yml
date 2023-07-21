@@ -5,6 +5,9 @@ on:
   push:
   pull_request: 
   workflow_dispatch:
+
+env:
+  ROS_DISTRO_LIST: 'rolling,iron,humble,foxy,galactic'
     
 jobs:
   # This job is used to build the calibration firmware
@@ -54,10 +57,11 @@ jobs:
           python-version: '3.9'
 
       # run the python script to parse the platformio.ini file and output as json to a matrix
+      # pass the ros distros desired as arguments
       - name: Parse platformio.ini
         id: set-matrix
         run: |
-          echo "matrix=$(python .github/parse_platformio.py 'rolling' 'humble')" >> $GITHUB_OUTPUT
+          echo "matrix=$(python .github/parse_platformio.py ${{ env.ROS_DISTRO_LIST }})" >> $GITHUB_OUTPUT
 
 
   # This job builds the firmware for each environment parsed from the platformio.ini file
