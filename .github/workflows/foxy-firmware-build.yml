@@ -4,9 +4,11 @@ on:
   pull_request:
     branches:
       - foxy
+      - foxy*
   push:
     branches:
       - foxy
+      - foxy*
   schedule:
     # Run every morning to detect flakiness and broken dependencies
     - cron: '03 1 * * *'
@@ -18,4 +20,4 @@ jobs:
     uses: ./.github/workflows/reusable-platformio-ci.yml
     with:
       ros_distro: foxy
-      reference: foxy
+      reference: foxy-fix
