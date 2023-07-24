@@ -8,12 +8,24 @@ on:
       - galactic*
       - humble*
       - iron*
+    paths-ignore:
+      - 'docs/**'
+      - .gitignore
+      - LICENSE
+      - README.md
+
   push:
     branches-ignore:
       - foxy*
       - galactic*
       - humble*
       - iron*
+    paths-ignore:
+      - 'docs/**'
+      - .gitignore
+      - LICENSE
+      - README.md
+    
   schedule:
     # Run every morning to detect flakiness and broken dependencies
     - cron: '03 1 * * *'
