@@ -243,7 +243,7 @@ bool createEntities()
     joint_state_msg.name.data[3] = micro_ros_string_utilities_set(joint_state_msg.name.data[3], MOTOR4_JOINT);
 
     // set joint states to 0
-    stop_joints();
+    reset_joint_states();
 
     // synchronize time with the agent
     syncTime();
@@ -271,7 +271,7 @@ bool destroyEntities()
     return true;
 }
 
-void stop_joints()
+void reset_joint_states()
 {
   // set all measured joint states to 0
   for(int i=0; i<NR_OF_JOINTS; i++)
@@ -342,6 +342,21 @@ void moveBase()
     );
 }
 
+
+/**
+ * @brief Wraps an angle to the range [-M_PI, M_PI].
+ *
+ * This function takes an angle in radians and wraps it to ensure it lies within
+ * the range [-M_PI, M_PI]. This is useful for normalizing angles to a consistent
+ * range, especially when dealing with rotational data that can exceed these bounds.
+ *
+ * @param angle The angle in radians to be wrapped.
+ * @return The wrapped angle in the range [-M_PI, M_PI].
+ */
+double wrapAngle(double angle) {
+    return angle - 2.0 * M_PI * floor((angle + M_PI) / (2.0 * M_PI));
+}
+
 void publishData()
 {
     odom_msg = odometry.getData();
@@ -358,13 +373,12 @@ void publishData()
     joint_state_msg.header.stamp.sec = time_stamp.tv_sec;
     joint_state_msg.header.stamp.nanosec = time_stamp.tv_nsec;
 
-    // populate required and measured joint states: velocities (rad/s) and positions (rads, in range[-pi, pi])
+    // populate measured joint states: velocities (rad/s) and positions (rads, in range[-pi, pi])
     for(int i=0; i<NR_OF_JOINTS; i++)
     {
         joint_state_msg.velocity.data[i] = current_rpm[i] * M_PI * 2 / 60; // rpm to rad/s
         joint_state_msg.position.data[i] += joint_state_msg.velocity.data[i] / JOINT_UPDATE_FREQ;  // rad/s to rad
-        if (joint_state_msg.position.data[i] > M_PI){ joint_state_msg.position.data[i] = -1.0 * M_PI; }
-        if (joint_state_msg.position.data[i] < -1.0 * M_PI){ joint_state_msg.position.data[i] = M_PI; }
+        joint_state_msg.position.data[i] = wrapAngle(joint_state_msg.position.data[i]);
     } 
     
 
