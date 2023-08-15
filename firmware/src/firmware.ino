@@ -51,7 +51,7 @@
 #define MOTOR2_JOINT "front_right_wheel_joint"
 #define MOTOR3_JOINT "rear_left_wheel_joint"
 #define MOTOR4_JOINT "rear_right_wheel_joint"
-#define JOINT_UPDATE_FREQ 50  // Control timer frequency in Hz (50Hz = 20ms)
+#define UPDATE_FREQ_HZ 50  // Control timer frequency in Hz (50Hz = 20ms)
 
 
 rcl_publisher_t odom_publisher;
@@ -209,12 +209,12 @@ bool createEntities()
         ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist),
         "cmd_vel"
     ));
-    // create timer for actuating the motors at 50 Hz (1000/20)
-    const unsigned int control_timeout = 20;
+    // create timer for actuating the motors at n Hz 
+    const unsigned int timeout_ms = 1000 / UPDATE_FREQ_HZ;
     RCCHECK(rclc_timer_init_default( 
         &control_timer, 
         &support,
-        RCL_MS_TO_NS(control_timeout),
+        RCL_MS_TO_NS(timeout_ms),
         controlCallback
     ));
     executor = rclc_executor_get_zero_initialized_executor();
@@ -377,9 +377,19 @@ void publishData()
     for(int i=0; i<NR_OF_JOINTS; i++)
     {
         joint_state_msg.velocity.data[i] = current_rpm[i] * M_PI * 2 / 60; // rpm to rad/s
-        joint_state_msg.position.data[i] += joint_state_msg.velocity.data[i] / JOINT_UPDATE_FREQ;  // rad/s to rad
+        joint_state_msg.position.data[i] += joint_state_msg.velocity.data[i] / UPDATE_FREQ_HZ;  // rad/s to rad
         joint_state_msg.position.data[i] = wrapAngle(joint_state_msg.position.data[i]);
     } 
+
+    //prevent empty joint velocity being published, change it to zero to stop jitter
+    if(joint_state_msg.velocity.size == 0) 
+    {
+        joint_state_msg.velocity.size = NR_OF_JOINTS;
+        for(int i = 0; i < NR_OF_JOINTS; i++) 
+        {
+            joint_state_msg.velocity.data[i] = 0.0;
+        }
+    }
     
 
     RCSOFTCHECK(rcl_publish(&imu_publisher, &imu_msg, NULL));
