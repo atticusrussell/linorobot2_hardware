@@ -1,3 +1,4 @@
+// Copyright (c) 2023 Aditya Kamath
 // Copyright (c) 2021 Juan Miguel Jimeno
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +23,7 @@
 
 #include <nav_msgs/msg/odometry.h>
 #include <sensor_msgs/msg/imu.h>
+#include <sensor_msgs/msg/joint_state.h>
 #include <geometry_msgs/msg/twist.h>
 #include <geometry_msgs/msg/vector3.h>
 
@@ -43,12 +45,23 @@
   if (uxr_millis() - init > MS) { X; init = uxr_millis();} \
 } while (0)
 
+#define NR_OF_JOINTS 4
+#define BASE_FRAME_ID "base_link"
+#define MOTOR1_JOINT "front_left_wheel_joint"
+#define MOTOR2_JOINT "front_right_wheel_joint"
+#define MOTOR3_JOINT "rear_left_wheel_joint"
+#define MOTOR4_JOINT "rear_right_wheel_joint"
+#define JOINT_UPDATE_FREQ 50  // Control timer frequency in Hz (50Hz = 20ms)
+
+
 rcl_publisher_t odom_publisher;
 rcl_publisher_t imu_publisher;
+rcl_publisher_t joint_state_publisher;
 rcl_subscription_t twist_subscriber;
 
 nav_msgs__msg__Odometry odom_msg;
 sensor_msgs__msg__Imu imu_msg;
+sensor_msgs__msg__JointState joint_state_msg;
 geometry_msgs__msg__Twist twist_msg;
 
 rclc_executor_t executor;
@@ -56,6 +69,8 @@ rclc_support_t support;
 rcl_allocator_t allocator;
 rcl_node_t node;
 rcl_timer_t control_timer;
+
+float current_rpm[NR_OF_JOINTS];
 
 unsigned long long time_offset = 0;
 unsigned long prev_cmd_time = 0;
@@ -180,6 +195,13 @@ bool createEntities()
         ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs, msg, Imu),
         "imu/data"
     ));
+    // create (measured) joint state publisher 
+    RCCHECK(rclc_publisher_init_default( 
+        &joint_state_publisher, 
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs, msg, JointState),
+        "joint_states"
+    ));
     // create twist command subscriber
     RCCHECK(rclc_subscription_init_default( 
         &twist_subscriber, 
@@ -206,6 +228,23 @@ bool createEntities()
     ));
     RCCHECK(rclc_executor_add_timer(&executor, &control_timer));
 
+    // initialize joint state message memory
+    micro_ros_utilities_create_message_memory(
+        ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs, msg, JointState),
+        &joint_state_msg,
+        (micro_ros_utilities_memory_conf_t) {});
+
+    // populate fixed message fields - size, frame ID and joint names for measured joint state
+    joint_state_msg.name.size = joint_state_msg.position.size = joint_state_msg.velocity.size = NR_OF_JOINTS;
+    joint_state_msg.header.frame_id = micro_ros_string_utilities_set(joint_state_msg.header.frame_id, BASE_FRAME_ID); 
+    joint_state_msg.name.data[0] = micro_ros_string_utilities_set(joint_state_msg.name.data[0], MOTOR1_JOINT);
+    joint_state_msg.name.data[1] = micro_ros_string_utilities_set(joint_state_msg.name.data[1], MOTOR2_JOINT);
+    joint_state_msg.name.data[2] = micro_ros_string_utilities_set(joint_state_msg.name.data[2], MOTOR3_JOINT);
+    joint_state_msg.name.data[3] = micro_ros_string_utilities_set(joint_state_msg.name.data[3], MOTOR4_JOINT);
+
+    // set joint states to 0
+    stop_joints();
+
     // synchronize time with the agent
     syncTime();
     digitalWrite(LED_PIN, HIGH);
@@ -220,6 +259,7 @@ bool destroyEntities()
 
     rcl_publisher_fini(&odom_publisher, &node);
     rcl_publisher_fini(&imu_publisher, &node);
+    rcl_publisher_fini(&joint_state_publisher, &node);
     rcl_subscription_fini(&twist_subscriber, &node);
     rcl_node_fini(&node);
     rcl_timer_fini(&control_timer);
@@ -229,6 +269,15 @@ bool destroyEntities()
     digitalWrite(LED_PIN, HIGH);
     
     return true;
+}
+
+void stop_joints()
+{
+  // set all measured joint states to 0
+  for(int i=0; i<NR_OF_JOINTS; i++)
+  {
+    current_rpm[i] = 0.0;
+  }
 }
 
 void fullStop()
@@ -262,23 +311,24 @@ void moveBase()
     );
 
     // get the current speed of each motor
-    float current_rpm1 = motor1_encoder.getRPM();
-    float current_rpm2 = motor2_encoder.getRPM();
-    float current_rpm3 = motor3_encoder.getRPM();
-    float current_rpm4 = motor4_encoder.getRPM();
+    current_rpm[0] = motor1_encoder.getRPM();
+    current_rpm[1] = motor2_encoder.getRPM();
+    current_rpm[2] = motor3_encoder.getRPM();
+    current_rpm[3] = motor4_encoder.getRPM();
 
     // the required rpm is capped at -/+ MAX_RPM to prevent the PID from having too much error
     // the PWM value sent to the motor driver is the calculated PID based on required RPM vs measured RPM
-    motor1_controller.spin(motor1_pid.compute(req_rpm.motor1, current_rpm1));
-    motor2_controller.spin(motor2_pid.compute(req_rpm.motor2, current_rpm2));
-    motor3_controller.spin(motor3_pid.compute(req_rpm.motor3, current_rpm3));
-    motor4_controller.spin(motor4_pid.compute(req_rpm.motor4, current_rpm4));
+    motor1_controller.spin(motor1_pid.compute(req_rpm.motor1, current_rpm[0]));
+    motor2_controller.spin(motor2_pid.compute(req_rpm.motor2, current_rpm[1]));
+    motor3_controller.spin(motor3_pid.compute(req_rpm.motor3, current_rpm[2]));
+    motor4_controller.spin(motor4_pid.compute(req_rpm.motor4, current_rpm[3]));
 
+    // get current velocities of the robot
     Kinematics::velocities current_vel = kinematics.getVelocities(
-        current_rpm1, 
-        current_rpm2, 
-        current_rpm3, 
-        current_rpm4
+        current_rpm[0], 
+        current_rpm[1], 
+        current_rpm[2], 
+        current_rpm[3]
     );
 
     unsigned long now = millis();
@@ -305,8 +355,22 @@ void publishData()
     imu_msg.header.stamp.sec = time_stamp.tv_sec;
     imu_msg.header.stamp.nanosec = time_stamp.tv_nsec;
 
+    joint_state_msg.header.stamp.sec = time_stamp.tv_sec;
+    joint_state_msg.header.stamp.nanosec = time_stamp.tv_nsec;
+
+    // populate required and measured joint states: velocities (rad/s) and positions (rads, in range[-pi, pi])
+    for(int i=0; i<NR_OF_JOINTS; i++)
+    {
+        joint_state_msg.velocity.data[i] = current_rpm[i] * M_PI * 2 / 60; // rpm to rad/s
+        joint_state_msg.position.data[i] += joint_state_msg.velocity.data[i] / JOINT_UPDATE_FREQ;  // rad/s to rad
+        if (joint_state_msg.position.data[i] > M_PI){ joint_state_msg.position.data[i] = -1.0 * M_PI; }
+        if (joint_state_msg.position.data[i] < -1.0 * M_PI){ joint_state_msg.position.data[i] = M_PI; }
+    } 
+    
+
     RCSOFTCHECK(rcl_publish(&imu_publisher, &imu_msg, NULL));
     RCSOFTCHECK(rcl_publish(&odom_publisher, &odom_msg, NULL));
+    RCSOFTCHECK(rcl_publish(&joint_state_publisher, &joint_state_msg, NULL));
 }
 
 void syncTime()
