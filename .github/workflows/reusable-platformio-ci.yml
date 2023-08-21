@@ -106,9 +106,11 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install PlatformIO Core
+      - name: Install PlatformIO Core and add to path
         run: |
           pip install --upgrade platformio
+          echo "PATH=\"\$PATH:\$HOME/.platformio/penv/bin\"" >> $HOME/.bashrc
+          source $HOME/.bashrc
 
       # NOTE all req. PIO pip packages should already be installed, but found these to be necessary
       # Missing packages determined from error messages
