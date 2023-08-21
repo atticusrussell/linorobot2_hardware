@@ -106,14 +106,8 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install PlatformIO Core
-        run: pip install --upgrade platformio
-
-      - name: Install PIO in Home
-        run: |
-          python3 -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/master/scripts/get-platformio.py)"
-          echo "PATH=\"\$PATH:\$HOME/.platformio/penv/bin\"" >> $HOME/.bashrc
-          source $HOME/.bashrc
+      - name: Install PlatformIO Core globally using pip user mode
+        run: python -m pip install -U platformio
 
       # NOTE all req. PIO pip packages should already be installed, but found these to be necessary
       # Missing packages determined from error messages
