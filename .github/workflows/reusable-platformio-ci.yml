@@ -112,7 +112,8 @@ jobs:
 
       - name: DEBUG Examine pio dir
         run: |
-          TEMPVAR = $(ls -R ~/.platformio/)
+          ls -la >> $GITHUB_OUTPUT
+          TEMPVAR = $(ls -Ra ~/.platformio/)
           echo $TEMPVAR >> $GITHUB_OUTPUT
           
 
