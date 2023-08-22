@@ -110,11 +110,15 @@ jobs:
         run: |
           pip install --upgrade platformio
 
-      - name: DEBUG Examine pio dir
+      - name: DEBUG Examine home dir
         run: |
-          ls -la >> $GITHUB_OUTPUT
-          TEMPVAR = $(ls -Ra ~/.platformio/)
-          echo $TEMPVAR >> $GITHUB_OUTPUT
+          ls -la ~ > tempfile.txt
+          cat tempfile.txt >> $GITHUB_OUTPUT
+          
+      - name: DEBUG Examine PIO dir
+        run: |
+          ls -Ra  ~/.platformio/ > tempfile1.txt
+          cat tempfile1.txt >> $GITHUB_OUTPUT
           
 
       # NOTE all req. PIO pip packages should already be installed, but found these to be necessary
