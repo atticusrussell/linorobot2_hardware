@@ -108,15 +108,15 @@ jobs:
 
       - name: Install PlatformIO Core in expected location
         run: |
-          cd ~
-          mkdir .platformio 
-          cd .platformio
-          python3 -m venv penv
-          source penv/bin/activate
           pip install --upgrade platformio
+        # cd ~
+        # mkdir .platformio 
+        # cd .platformio
+        # python3 -m venv penv
+        # source penv/bin/activate
 
-      - name: Initialize PlatformIO
-        run: pio --version
+      # - name: Initialize PlatformIO
+      #   run: pio --version
         
       - name: DEBUG Examine home dir
         run: ls -la ~
