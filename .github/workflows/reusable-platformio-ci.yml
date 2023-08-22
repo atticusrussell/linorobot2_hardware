@@ -108,7 +108,7 @@ jobs:
 
       - name: Install PlatformIO Core and add to path
         run: |
-          pip install --upgrade platformio
+          pip install -U --upgrade platformio
 
       - name: DEBUG Examine home dir
         run: ls -la ~
