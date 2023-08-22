@@ -127,8 +127,9 @@ jobs:
 
       # NOTE all req. PIO pip packages should already be installed, but found these to be necessary
       # Missing packages determined from error messages
-      - name: Install required pip packages
+      - name: Install required pip packages in penv
         run: |
+          source ~/.platformio/penv/bin/activate
           pip install --upgrade catkin_pkg
           pip uninstall em
           pip install empy lark
