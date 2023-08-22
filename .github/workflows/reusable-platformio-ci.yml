@@ -112,13 +112,13 @@ jobs:
 
       - name: DEBUG Examine home dir
         run: |
-          ls -la ~ > tempfile.txt
-          cat tempfile.txt >> $GITHUB_OUTPUT
+          lsoutput=$(ls -la ~)
+          echo 'lsoutput<<EOF' >> $GITHUB_OUTPUT
           
-      - name: DEBUG Examine PIO dir
-        run: |
-          ls -Ra  ~/.platformio/ > tempfile1.txt
-          cat tempfile1.txt >> $GITHUB_OUTPUT
+      # - name: DEBUG Examine PIO dir
+      #   run: |
+      #     ls -Ra  ~/.platformio/ > tempfile1.txt
+      #     cat tempfile1.txt >> $GITHUB_OUTPUT
           
 
       # NOTE all req. PIO pip packages should already be installed, but found these to be necessary
