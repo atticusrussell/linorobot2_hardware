@@ -40,9 +40,6 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: update pip
-        run: python -m pip install --upgrade pip
-
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
 
@@ -110,32 +107,12 @@ jobs:
           python-version: '3.10'
 
       - name: Install PlatformIO Core with pip
-        run: |
-          pip3 install --upgrade platformio
+        run: pip3 install --upgrade platformio
 
       - name: Manually create penv
         run: |
           cd ~/.platformio
           python3 -m venv penv
-
-      # - name: Initialize PlatformIO
-      #   run: pio --version
-        
-      - name: DEBUG Examine home dir
-        run: ls -la ~
-          
-      - name: DEBUG Examine PIO dir
-        run: |
-          ls -Ra  ~/.platformio/ 
-
-      # NOTE all req. PIO pip packages should already be installed, but found these to be necessary
-      # Missing packages determined from error messages
-      # - name: Install required pip packages in penv
-      #   run: |
-      #     source ~/.platformio/penv/bin/activate
-      #     pip install --upgrade catkin_pkg
-      #     pip uninstall em
-      #     pip install empy lark
 
       # Build the firmware for each environment in parallel
       - name: Build Firmware
