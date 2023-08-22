@@ -95,12 +95,12 @@ jobs:
           ref: ${{ inputs.reference }}
 
       # speed up workflows by caching dependencies
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/pip
-            ~/.platformio/.cache
-          key: ${{ runner.os }}-pio
+      # - uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       ~/.cache/pip
+      #       ~/.platformio/.cache
+      #     key: ${{ runner.os }}-pio
       
       - uses: actions/setup-python@v4
         with:
@@ -109,8 +109,9 @@ jobs:
       - name: Install PlatformIO Core and add to path
         run: |
           pip install --upgrade platformio
-          echo "PATH=\"\$PATH:\$HOME/.platformio/penv/bin\"" >> $HOME/.bashrc
-          source $HOME/.bashrc
+
+      - name: DEBUG Examine pio dir
+        run: echo "ls -R ~/.platformio/" >> $GITHUB_OUTPUT
 
       # NOTE all req. PIO pip packages should already be installed, but found these to be necessary
       # Missing packages determined from error messages
