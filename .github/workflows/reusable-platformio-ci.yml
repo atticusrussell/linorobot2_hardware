@@ -111,7 +111,10 @@ jobs:
           pip install --upgrade platformio
 
       - name: DEBUG Examine pio dir
-        run: echo "ls -R ~/.platformio/" >> $GITHUB_OUTPUT
+        run: |
+          TEMPVAR = $(ls -R ~/.platformio/)
+          echo $TEMPVAR >> $GITHUB_OUTPUT
+          
 
       # NOTE all req. PIO pip packages should already be installed, but found these to be necessary
       # Missing packages determined from error messages
