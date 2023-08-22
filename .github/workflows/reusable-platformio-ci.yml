@@ -106,14 +106,14 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install PlatformIO Core in expected location
+      - name: Install PlatformIO Core with pip
         run: |
           pip install --upgrade platformio
-        # cd ~
-        # mkdir .platformio 
-        # cd .platformio
-        # python3 -m venv penv
-        # source penv/bin/activate
+
+      - name: Manually create penv
+        run: |
+          cd ~/.platformio
+          python3 -m venv penv
 
       # - name: Initialize PlatformIO
       #   run: pio --version
