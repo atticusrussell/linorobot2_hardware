@@ -95,12 +95,12 @@ jobs:
           ref: ${{ inputs.reference }}
 
       # speed up workflows by caching dependencies
-      # - uses: actions/cache@v3
-      #   with:
-      #     path: |
-      #       ~/.cache/pip
-      #       ~/.platformio/.cache
-      #     key: ${{ runner.os }}-pio
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
       
       - uses: actions/setup-python@v4
         with:
@@ -110,6 +110,9 @@ jobs:
         run: |
           pip install -U --upgrade platformio
 
+      - name: Initialize PlatformIO
+        run: pio --version
+        
       - name: DEBUG Examine home dir
         run: ls -la ~
         # echo 'lsoutput<<EOF' >> $GITHUB_OUTPUT
