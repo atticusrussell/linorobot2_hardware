@@ -20,10 +20,10 @@ on:
       - LICENSE
       - README.md
   
+  # Run daily at midnight to detect flakiness and broken dependencies
   schedule:
-    # Run daily at midnight to detect flakiness and broken dependencies
-    - cron: '03 1 * * *'
-  
+    - cron: '0 0 * * *'
+
   # Allow manual triggering
   workflow_dispatch:
 

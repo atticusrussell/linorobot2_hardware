@@ -22,8 +22,8 @@ on:
       - LICENSE
       - README.md
     
+  # Run daily at midnight to detect flakiness and broken dependencies
   schedule:
-    # Run daily at midnight to detect flakiness and broken dependencies
     - cron: '0 0 * * *'
 
   # Allow manual triggering
