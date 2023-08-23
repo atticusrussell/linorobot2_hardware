@@ -1,0 +1,32 @@
+name: ROS Foxy Firmware Build
+
+on:
+  pull_request:
+    branches:
+      - foxy*
+    paths-ignore:
+      - 'docs/**'
+      - .gitignore
+      - LICENSE
+      - README.md
+  
+  push:
+    branches:
+      - foxy*
+    paths-ignore:
+      - 'docs/**'
+      - .gitignore
+      - LICENSE
+      - README.md
+  
+  schedule:
+    # Run every morning to detect flakiness and broken dependencies
+    - cron: '03 1 * * *'
+  workflow_dispatch:
+
+
+jobs:
+  firmware:
+    uses: ./.github/workflows/reusable-platformio-ci.yml
+    with:
+      ros_distro: foxy
