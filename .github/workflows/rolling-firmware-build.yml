@@ -1,11 +1,12 @@
 name: ROS Rolling Firmware Build
 
+# Get the default branch name from the repository settings
 env:
   DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
 
 on:
   pull_request:
-    # Run on PRs to only the default branch (usually main or master)
+    # Run only on PRs to the default branch (usually main or master)
     branches:
       - DEFAULT_BRANCH
     # Don't run when the following files are changed which don't effect firmware.
@@ -15,7 +16,6 @@ on:
       - LICENSE
       - README.md
   
-  # not specifying branches means will run on pushes to any branches. This is alright for rolling
   push:
     # Run on pushes to any branches except these distro-specific branches
     branches-ignore:
@@ -40,6 +40,7 @@ on:
 
 jobs:
   firmware:
+    # The current file calls the firmware workflow with the following parameters
     uses: ./.github/workflows/reusable-platformio-ci.yml
     with:
       ros_distro: rolling

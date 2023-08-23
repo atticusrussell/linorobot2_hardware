@@ -1,10 +1,11 @@
 name: ROS Humble Firmware Build
 
 on:
-  # run on PRs and pushes to humble branch(es)
   pull_request:
+    # Run on PRs only to branches starting with 'humble'
     branches:
       - humble*
+    # Don't run when the following files are changed which don't effect firmware.
     paths-ignore:
       - 'docs/**'
       - .gitignore
@@ -12,8 +13,10 @@ on:
       - README.md
   
   push:
+    # Run on pushes only to branches starting with 'humble'
     branches:
       - humble*
+    # Don't run when the following files are changed which don't effect firmware.
     paths-ignore:
       - 'docs/**'
       - .gitignore
@@ -30,6 +33,7 @@ on:
 
 jobs:
   firmware:
+    # The current file calls the firmware workflow with the following parameters
     uses: ./.github/workflows/reusable-platformio-ci.yml
     with:
       ros_distro: humble
