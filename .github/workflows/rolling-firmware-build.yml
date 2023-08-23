@@ -4,10 +4,11 @@ env:
   DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
 
 on:
-  # avoid running on distro branches but otherwise always
   pull_request:
+    # Run on PRs to only the default branch (usually main or master)
     branches:
       - DEFAULT_BRANCH
+    # Don't run when the following files are changed which don't effect firmware.
     paths-ignore:
       - 'docs/**'
       - .gitignore
@@ -16,6 +17,13 @@ on:
   
   # not specifying branches means will run on pushes to any branches. This is alright for rolling
   push:
+    # Run on pushes to any branches except these distro-specific branches
+    branches-ignore:
+      - iron*
+      - humble*
+      - galactic*
+      - foxy*
+    # Don't run when the following files are changed which don't effect firmware.
     paths-ignore:
       - 'docs/**'
       - .gitignore
