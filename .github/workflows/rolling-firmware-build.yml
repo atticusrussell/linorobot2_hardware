@@ -3,23 +3,16 @@ name: ROS Rolling Firmware Build
 on:
   # avoid running on distro branches but otherwise always
   pull_request:
-    branches-ignore:
-      - foxy*
-      - galactic*
-      - humble*
-      - iron*
+    branches:
+      - ${{ github.event.repository.default_branch }}
     paths-ignore:
       - 'docs/**'
       - .gitignore
       - LICENSE
       - README.md
-
+  
+  # not specifying branches means will run on all branches. This is alright for rolling
   push:
-    branches-ignore:
-      - foxy*
-      - galactic*
-      - humble*
-      - iron*
     paths-ignore:
       - 'docs/**'
       - .gitignore
@@ -27,8 +20,10 @@ on:
       - README.md
     
   schedule:
-    # Run every morning to detect flakiness and broken dependencies
-    - cron: '03 1 * * *'
+    # Run at midnight to detect flakiness and broken dependencies
+    - cron: '0 0 * * *'
+
+  # Allow manual triggering
   workflow_dispatch:
 
 
