@@ -14,7 +14,7 @@ on:
       - LICENSE
       - README.md
   
-  # not specifying branches means will run on all branches. This is alright for rolling
+  # not specifying branches means will run on pushes to any branches. This is alright for rolling
   push:
     paths-ignore:
       - 'docs/**'
@@ -23,7 +23,7 @@ on:
       - README.md
     
   schedule:
-    # Run at midnight to detect flakiness and broken dependencies
+    # Run daily at midnight to detect flakiness and broken dependencies
     - cron: '0 0 * * *'
 
   # Allow manual triggering
