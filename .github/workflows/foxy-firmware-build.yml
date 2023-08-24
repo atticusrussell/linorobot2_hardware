@@ -2,16 +2,6 @@ name: ROS Foxy Firmware Build
 
 on:
   pull_request:
-<<<<<<< HEAD
-    branches:
-      - foxy*
-  push:
-    branches:
-      - foxy*
-  schedule:
-    # Run every morning to detect flakiness and broken dependencies
-    - cron: '03 1 * * *'
-=======
     # Run on PRs only to branches starting with 'foxy'
     branches:
       - foxy*
@@ -38,21 +28,14 @@ on:
     - cron: '0 0 * * *'
 
   # Allow manual triggering
->>>>>>> e7647e9 (Add CI for individual ROS distro branches)
   workflow_dispatch:
 
 
 jobs:
   firmware:
-<<<<<<< HEAD
-    uses: ./.github/workflows/reusable-platformio-ci.yml
-    with:
-      ros_distro: foxy
-=======
     # The current file calls the firmware workflow with the following parameters
     uses: ./.github/workflows/reusable-platformio-ci.yml
     with:
       ros_distro: foxy
       # The reference field will be set to 'foxy' only if the event that triggered the workflow is schedule. Otherwise, it will be left blank.
       reference: ${{ github.event_name == 'schedule' && 'foxy' || '' }}
->>>>>>> e7647e9 (Add CI for individual ROS distro branches)
