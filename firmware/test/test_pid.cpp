@@ -32,8 +32,8 @@ void test_compute_non_zero_error() {
 
 void test_integral_windup() {
     dut_pid.compute(0, 0);
-    TEST_ASSERT_EQUAL_DOUBLE(0, dut_pid.integral_);
-    TEST_ASSERT_EQUAL_DOUBLE(0, dut_pid.derivative_);
+    TEST_ASSERT_EQUAL_DOUBLE(0, dut_pid.getIntegral());
+    TEST_ASSERT_EQUAL_DOUBLE(0, dut_pid.getDerivative());
 }
 
 void test_output_constrain() {
