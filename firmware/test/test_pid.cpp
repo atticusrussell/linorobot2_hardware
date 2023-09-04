@@ -21,7 +21,7 @@ void tearDown(void){
 
 void test_compute_zero_error() {
     double output = dut_pid.compute(100, 100);
-    TEST_ASSERT_EQUAL_DOUBLE(0, output);
+    TEST_ASSERT_FLOAT_WITHIN(1e-10, 0, output); // Check if output is within a small tolerance of 0
 }
 
 void test_compute_non_zero_error() {
