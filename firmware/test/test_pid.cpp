@@ -20,6 +20,10 @@ void tearDown(void){
     // no cleanup necessary
 }
 
+/**
+ * @brief A system in the desired state should not have any correction
+ * 
+ */
 void test_compute_zero_error() {
     double output = dut_pid.compute(100, 100);
     TEST_ASSERT_FLOAT_WITHIN(1e-10, 0, output); // Check if output is within a small tolerance of 0
