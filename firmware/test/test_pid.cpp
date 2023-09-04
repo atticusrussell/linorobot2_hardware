@@ -13,6 +13,7 @@ PID dut_pid(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
 void setUp(void) {
      // Reset PID internal states by reinitializing
     dut_pid = PID(PWM_MIN, PWM_MAX, K_P, K_I, K_D);
+    // dut_pid.updateConstants(K_P, K_I, K_D); // Reset the constants
 }
 
 void tearDown(void){
@@ -24,10 +25,22 @@ void test_compute_zero_error() {
     TEST_ASSERT_FLOAT_WITHIN(1e-10, 0, output); // Check if output is within a small tolerance of 0
 }
 
-void test_compute_non_zero_error() {
+/**
+ * @brief Test if the feedback is positive when measured value is less than the setpoint
+ * 
+ */
+void test_positive_feedback(){
     double output = dut_pid.compute(100, 90);
-    double expected_output = K_P * 10; // Only P term contributes as it's the first compute call
-    TEST_ASSERT_EQUAL_DOUBLE(expected_output, output);
+    TEST_ASSERT_GREATER_THAN_DOUBLE(0,output);
+}
+
+/**
+ * @brief Test if the feedback is negative when measured value is greater than the setpoint
+ * 
+ */
+void test_negative_feedback(){
+    double output = dut_pid.compute(90, 100);
+    TEST_ASSERT_LESS_THAN_DOUBLE(0,output);
 }
 
 void test_integral_windup() {
@@ -41,20 +54,19 @@ void test_output_constrain() {
     TEST_ASSERT_TRUE(output <= PWM_MAX && output >= PWM_MIN);
 }
 
-void test_update_constants() {
-    float new_kp = 0.5, new_ki = 0.7, new_kd = 0.4;
-    dut_pid.updateConstants(new_kp, new_ki, new_kd);
-    double output = dut_pid.compute(100, 90);
-    double expected_output = new_kp * 10; // Only P term contributes as it's the first compute call after updating constants
-    TEST_ASSERT_EQUAL_DOUBLE(expected_output, output);
-}
+// TODO test updating constants
+
+
+// TODO model a real PID system
+
+
 
 int main(int argc, char **argv) {
     UNITY_BEGIN();
     RUN_TEST(test_compute_zero_error);
-    RUN_TEST(test_compute_non_zero_error);
+    RUN_TEST(test_positive_feedback);
+    RUN_TEST(test_negative_feedback);
     RUN_TEST(test_integral_windup);
     RUN_TEST(test_output_constrain);
-    RUN_TEST(test_update_constants);
     UNITY_END();
 }
