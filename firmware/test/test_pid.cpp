@@ -1,6 +1,10 @@
 #include <unity.h>
 #include "pid.h"
 
+#ifdef DESKTOP
+#include <ArduinoFake.h>
+#endif
+
 #define PWM_BITS 10
 #define PWM_MAX pow(2, PWM_BITS) - 1
 #define PWM_MIN -PWM_MAX
@@ -47,12 +51,14 @@ void test_negative_feedback(){
     TEST_ASSERT_LESS_THAN_DOUBLE(0,output);
 }
 
+// TODO double check this
 void test_integral_windup() {
     dut_pid.compute(0, 0);
     TEST_ASSERT_EQUAL_DOUBLE(0, dut_pid.getIntegral());
     TEST_ASSERT_EQUAL_DOUBLE(0, dut_pid.getDerivative());
 }
 
+// TODO comment
 void test_output_constrain() {
     double output = dut_pid.compute(1000, 0); // This will produce a large error
     TEST_ASSERT_TRUE(output <= PWM_MAX && output >= PWM_MIN);
