@@ -28,7 +28,7 @@
 #include "motor_interface.h"  // Base class for motor drivers
 
 /**
- * @brief A generic motor driver with 2 input pins and a PWM pin.
+ * @brief Motor drivers with 2 Direction Pins(INA, INB) and 1 PWM(ENABLE) pin ie. L298, L293, VNH5019
  */
 class Generic2: public MotorInterface
 {
@@ -80,7 +80,7 @@ class Generic2: public MotorInterface
 };
 
 /**
- * @brief A generic motor driver with 1 input pin and a PWM pin.
+ * @brief Motor drivers with 1 Direction Pin(INA) and 1 PWM(ENABLE) pin.
  */
 class Generic1: public MotorInterface
 {
@@ -127,7 +127,7 @@ class Generic1: public MotorInterface
 };
 
 /**
- * @brief Represents the BTS7960 motor driver.
+ * @brief BTS7960 motor driver.
  */
 class BTS7960: public MotorInterface
 {
@@ -199,7 +199,7 @@ class BTS7960: public MotorInterface
 };
 
 /**
- * @brief Represents an Electronic Speed Controller (ESC) for brushless motors.
+ * @brief Motor Electronic Speed Controller (ESC) for brushless motors.
  */
 class ESC: public MotorInterface
 {
