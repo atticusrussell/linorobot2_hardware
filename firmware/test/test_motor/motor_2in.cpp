@@ -1,8 +1,8 @@
 /// \file motor_2in.cpp
 /// \brief This file contains tests for motor control functionalities of 2 input motor drivers.
 ///
-/// \details Tests for Motor drivers with 2 Direction Pins(INA, INB) and 1 PWM(ENABLE) pin 
-/// ie. L298, L293, VNH5019
+/// \details Tests for Motor drivers with 2 Direction Pins(INA, INB) and 1 PWM(ENABLE) pin.
+/// Examples include L298, L293, VNH5019.
 
 #include <unity.h>
 
@@ -30,7 +30,8 @@ constexpr int g_motor_direction_pin_b = 8;
  * \brief Test the forward pins of the generic motor.
  */
 void test_generic2_forward_pins() {
-    Motor motor(g_pwm_frequency, g_pwm_bits, false, g_motor_pwm_pin, g_motor_direction_pin_a, g_motor_direction_pin_b);
+    Motor motor(g_pwm_frequency, g_pwm_bits, false, 
+                g_motor_pwm_pin, g_motor_direction_pin_a, g_motor_direction_pin_b);
     motor.spin(100);
     TEST_ASSERT_EQUAL(HIGH, digitalRead(g_motor_direction_pin_a));
     TEST_ASSERT_EQUAL(LOW, digitalRead(g_motor_direction_pin_b));
@@ -40,7 +41,8 @@ void test_generic2_forward_pins() {
  * \brief Test the forward pins of the generic motor with inverted configuration.
  */
 void test_generic2_forward_pins_inv() {
-    Motor motor(g_pwm_frequency, g_pwm_bits, true, g_motor_pwm_pin, g_motor_direction_pin_a, g_motor_direction_pin_b);
+    Motor motor(g_pwm_frequency, g_pwm_bits, true, 
+                g_motor_pwm_pin, g_motor_direction_pin_a, g_motor_direction_pin_b);
     motor.spin(100);
     TEST_ASSERT_EQUAL(LOW, digitalRead(g_motor_direction_pin_a));
     TEST_ASSERT_EQUAL(HIGH, digitalRead(g_motor_direction_pin_b));
@@ -50,7 +52,8 @@ void test_generic2_forward_pins_inv() {
  * \brief Test the reverse pins of the generic motor.
  */
 void test_generic2_reverse_pins() {
-    Motor motor(g_pwm_frequency, g_pwm_bits, false, g_motor_pwm_pin, g_motor_direction_pin_a, g_motor_direction_pin_b);
+    Motor motor(g_pwm_frequency, g_pwm_bits, false, 
+                g_motor_pwm_pin, g_motor_direction_pin_a, g_motor_direction_pin_b);
     motor.spin(-100);
     TEST_ASSERT_EQUAL(LOW, digitalRead(g_motor_direction_pin_a));
     TEST_ASSERT_EQUAL(HIGH, digitalRead(g_motor_direction_pin_b));
@@ -60,7 +63,8 @@ void test_generic2_reverse_pins() {
  * \brief Test the reverse pins of the generic motor with inverted configuration.
  */
 void test_generic2_reverse_pins_inv() {
-    Motor motor(g_pwm_frequency, g_pwm_bits, true, g_motor_pwm_pin, g_motor_direction_pin_a, g_motor_direction_pin_b);
+    Motor motor(g_pwm_frequency, g_pwm_bits, true, 
+                g_motor_pwm_pin, g_motor_direction_pin_a, g_motor_direction_pin_b);
     motor.spin(-100);
     TEST_ASSERT_EQUAL(HIGH, digitalRead(g_motor_direction_pin_a));
     TEST_ASSERT_EQUAL(LOW, digitalRead(g_motor_direction_pin_b));
