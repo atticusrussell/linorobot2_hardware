@@ -27,13 +27,8 @@ void setUp(void) {
     // dut_pid.updateConstants(K_P, K_I, K_D); // Reset the constants
 }
 
-void tearDown(void){
-    // no cleanup necessary
-}
-
 /**
- * @brief A system in the desired state should not have any correction
- * 
+ * @brief Test that a system in the desired state should not have any correction
  */
 void test_compute_zero_error() {
     double output = dut_pid.compute(100, 100);
@@ -42,7 +37,6 @@ void test_compute_zero_error() {
 
 /**
  * @brief Test if the feedback is positive when measured value is less than the setpoint
- * 
  */
 void test_positive_feedback(){
     double output = dut_pid.compute(100, 90);
@@ -51,14 +45,15 @@ void test_positive_feedback(){
 
 /**
  * @brief Test if the feedback is negative when measured value is greater than the setpoint
- * 
  */
 void test_negative_feedback(){
     double output = dut_pid.compute(90, 100);
     TEST_ASSERT_LESS_THAN_DOUBLE(0,output);
 }
 
-// TODO comment
+/**
+ * @brief Test that the PID output is constrained between the minimum and maximum values.
+ */
 void test_output_constrain() {
     double output = dut_pid.compute(1000, 0); // This will produce a large error
     TEST_ASSERT_TRUE(output <= PWM_MAX && output >= PWM_MIN);
