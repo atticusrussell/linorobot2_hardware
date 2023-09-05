@@ -1,7 +1,5 @@
-/// \file motor_2in.cpp
-/// \brief This file contains tests for motor control functionalities of 2 input motor drivers.
-///
-/// \details Tests for Motor drivers with 2 Direction Pins(INA, INB) and 1 PWM(ENABLE) pin.
+/// \file test_motor_2in.cpp
+/// \brief Tests for Motor drivers with 2 Direction Pins(INA, INB) and 1 PWM(ENABLE) pin.
 /// Examples include L298, L293, VNH5019.
 
 #include <unity.h>
