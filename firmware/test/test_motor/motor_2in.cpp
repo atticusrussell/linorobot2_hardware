@@ -1,5 +1,6 @@
 /// \file motor_2in.cpp
 /// \brief This file contains tests for motor control functionalities of 2 input motor drivers.
+///
 /// \details Tests for Motor drivers with 2 Direction Pins(INA, INB) and 1 PWM(ENABLE) pin 
 /// ie. L298, L293, VNH5019
 
