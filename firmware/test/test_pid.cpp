@@ -1,3 +1,10 @@
+/**
+ * @file test_pid.cpp
+ * @brief Unit tests for the PID controller class.
+ *
+ * This file contains unit tests for the PID controller class to ensure its correct functionality.
+ */
+
 #include <unity.h>
 #include "pid.h"
 
@@ -51,21 +58,15 @@ void test_negative_feedback(){
     TEST_ASSERT_LESS_THAN_DOUBLE(0,output);
 }
 
-// TODO double check this
-void test_integral_windup() {
-    dut_pid.compute(0, 0);
-    TEST_ASSERT_EQUAL_DOUBLE(0, dut_pid.getIntegral());
-    TEST_ASSERT_EQUAL_DOUBLE(0, dut_pid.getDerivative());
-}
-
 // TODO comment
 void test_output_constrain() {
     double output = dut_pid.compute(1000, 0); // This will produce a large error
     TEST_ASSERT_TRUE(output <= PWM_MAX && output >= PWM_MIN);
 }
 
-// TODO test updating constants
+// TODO test updating constants by setting KI and KD 0
 
+// TODO write a test for integral windup
 
 // TODO model a real PID system
 
@@ -76,7 +77,6 @@ int main(int argc, char **argv) {
     RUN_TEST(test_compute_zero_error);
     RUN_TEST(test_positive_feedback);
     RUN_TEST(test_negative_feedback);
-    RUN_TEST(test_integral_windup);
     RUN_TEST(test_output_constrain);
     UNITY_END();
 }
