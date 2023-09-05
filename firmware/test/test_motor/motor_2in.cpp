@@ -6,15 +6,17 @@
 
 #include <unity.h>
 
-#define USE_GENERIC_2_IN_MOTOR_DRIVER 
-#include "motor.h"
-
 #ifdef DESKTOP
 #include <ArduinoFake.h>
+#include <Servo.h>
 using namespace fakeit;
 #else
 #include <Arduino.h>
 #endif
+
+#define USE_GENERIC_2_IN_MOTOR_DRIVER 
+#include "motor.h"
+
 
 constexpr int g_pwm_bits = 10;  // PWM Resolution of the microcontroller
 constexpr int g_pwm_frequency = 20000;  // PWM Frequency
