@@ -7,9 +7,6 @@
 #include <unity.h>
 #include "pid.h"
 
-#ifdef DESKTOP
-#include <ArduinoFake.h>
-#endif
 
 constexpr int g_pwm_bits = 10;
 constexpr double g_pwm_max = pow(2, g_pwm_bits) - 1;

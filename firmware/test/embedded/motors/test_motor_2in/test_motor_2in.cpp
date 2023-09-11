@@ -2,15 +2,8 @@
 /// \brief Tests for Motor drivers with 2 Direction Pins(INA, INB) and 1 PWM(ENABLE) pin.
 /// Examples include L298, L293, VNH5019.
 
-#include <unity.h>
-
-#ifdef DESKTOP
-#include <ArduinoFake.h>
-#include <Servo.h>
-using namespace fakeit;
-#else
 #include <Arduino.h>
-#endif
+#include <unity.h>
 
 #define USE_GENERIC_2_IN_MOTOR_DRIVER 
 #include "motor.h"

@@ -1,15 +1,8 @@
 /// \file test_motor_1in.cpp
 /// \brief Tests for Motor drivers with 1 Direction Pin(INA) and 1 PWM(ENABLE) pin.
 
-#include <unity.h>
-
-#ifdef DESKTOP
-#include <ArduinoFake.h>
-#include <Servo.h>
-using namespace fakeit;
-#else
 #include <Arduino.h>
-#endif
+#include <unity.h>
 
 #define USE_GENERIC_1_IN_MOTOR_DRIVER 
 #include "motor.h"
