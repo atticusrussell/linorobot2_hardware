@@ -16,8 +16,8 @@
 #define ODOMETRY_H
 
 #include <Arduino.h>
-#include <micro_ros_utilities/type_utilities.h>
-#include <micro_ros_utilities/string_utilities.h>
+// #include <micro_ros_utilities/type_utilities.h>
+// #include <micro_ros_utilities/string_utilities.h>
 #include <nav_msgs/msg/odometry.h>
 
 /**
@@ -53,6 +53,8 @@ class Odometry
         nav_msgs__msg__Odometry getData();
 
     private:
+        friend void test_euler_to_quat_conversion(void);
+
         /**
          * @brief Convert Euler angles to a quaternion.
          * 
