@@ -3,6 +3,7 @@
 ///
 /// This file contains unit tests for the PID controller class to ensure its correct functionality.
 
+
 #include <unity.h>
 #include "pid.h"
 
@@ -17,6 +18,12 @@ constexpr double g_k_p = 0.6;  // P constant
 constexpr double g_k_i = 0.8;  // I constant
 constexpr double g_k_d = 0.5;  // D constant
 
+// TODO swap to using TEST_ASSERT_GREATER_THAN_DOUBLE and TEST_ASSERT_FLOAT_WITHIN once unity is 
+// released in new version updated on PlatformIO registry. Workarounds until then.
+// aware that can manually include newer version as libdep, but causes problems
+
+constexpr double fp_tolerance = 1e-10;
+
 PID g_dut_pid(g_pwm_min, g_pwm_max, g_k_p, g_k_i, g_k_d);
 
 void setUp(void) {
@@ -29,8 +36,15 @@ void setUp(void) {
  */
 void test_compute_zero_error() {
     double output = g_dut_pid.compute(100, 100);
+
     // Check if output is within a small tolerance of 0
-    TEST_ASSERT_FLOAT_WITHIN(1e-10, 0, output); 
+    // HACK for TEST_ASSERT_FLOAT_WITHIN(1e-10, 0, output); 
+    bool pid_near_zero = false;
+    if (abs(output) < fp_tolerance) {
+        pid_near_zero = true;
+    }
+
+    TEST_ASSERT_TRUE(pid_near_zero);
 }
 
 /** 
@@ -38,7 +52,10 @@ void test_compute_zero_error() {
  */
 void test_positive_feedback() {
     double output = g_dut_pid.compute(100, 90);
-    TEST_ASSERT_GREATER_THAN_DOUBLE(0, output);
+
+    // HACK for TEST_ASSERT_GREATER_THAN_DOUBLE(0, output);
+    bool pid_greater_than_zero = output > 0;
+    TEST_ASSERT_TRUE(pid_greater_than_zero);
 }
 
 /** 
@@ -46,7 +63,10 @@ void test_positive_feedback() {
  */
 void test_negative_feedback() {
     double output = g_dut_pid.compute(90, 100);
-    TEST_ASSERT_LESS_THAN_DOUBLE(0, output);
+
+    // HACK for TEST_ASSERT_LESS_THAN_DOUBLE(0, output);
+    bool pid_less_than_zero = output < 0;
+    TEST_ASSERT_TRUE(pid_less_than_zero);
 }
 
 /** 
