@@ -61,10 +61,5 @@ private:
     uint8_t servoIndex;
 };
 
-// Add stubs for items missing from ArduinoFake
-#ifdef DESKTOP
-void analogWriteFrequency(int pin, int freq) {}
-void analogWriteResolution(int bits) {}
-#endif
 
 #endif
