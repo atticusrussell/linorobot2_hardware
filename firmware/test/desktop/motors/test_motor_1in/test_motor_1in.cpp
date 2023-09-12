@@ -20,13 +20,35 @@ constexpr int g_motor_direction_pin_a = 6;
 // TODO figure out how to read PWM
 // TODO figure out how to meaningfully test brake
 
+
+void setUp(void){
+    When(Method(ArduinoFake(), pinMode)).AlwaysReturn();
+    When(Method(ArduinoFake(), analogWriteFrequency)).AlwaysReturn();
+    When(Method(ArduinoFake(), analogWriteResolution)).AlwaysReturn();
+    When(Method(ArduinoFake(), analogWrite)).AlwaysReturn();
+    When(Method(ArduinoFake(), digitalWrite)).AlwaysReturn();
+    When(Method(ArduinoFake(), digitalRead)).AlwaysReturn();
+
+}
+
 /** 
  * \brief Test the forward pin of the generic motor.
  */
 void test_generic1_forward_pin() {
+
+
     Motor motor(g_pwm_frequency, g_pwm_bits, false, 
                 g_motor_pwm_pin, g_motor_direction_pin_a);
+
+    Verify(Method(ArduinoFake(), pinMode).Using(g_motor_direction_pin_a, OUTPUT)).Once();
+    Verify(Method(ArduinoFake(), pinMode).Using(g_motor_pwm_pin, OUTPUT)).Once();
+    Verify(Method(ArduinoFake(), analogWriteFrequency).Using(g_motor_pwm_pin, g_pwm_frequency)).Once();
+    Verify(Method(ArduinoFake(), analogWriteResolution).Using(g_pwm_bits)).Once();
+    Verify(Method(ArduinoFake(), analogWrite).Using(g_motor_pwm_pin, 0)).Once();
+
+
     motor.spin(100);
+
     TEST_ASSERT_EQUAL(HIGH, digitalRead(g_motor_direction_pin_a));
 }
 
