@@ -176,4 +176,4 @@ jobs:
           ROS_DISTRO: ${{ inputs.ros_distro }}
         run: |
           cd firmware
-          pio run -e native
+          pio test -e native
