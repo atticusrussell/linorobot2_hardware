@@ -29,6 +29,14 @@ jobs:
           ref: ${{ inputs.reference }}
           path: repo
 
+      # Cache dependencies to speed up workflows
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
+
       - name: Install environment
         uses: ./repo/.github/actions/platformio-env
 
@@ -84,6 +92,14 @@ jobs:
         with:
           ref: ${{ inputs.reference }}
           path: repo
+
+      # Cache dependencies to speed up workflows
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
 
       - name: Install environment
         uses: ./repo/.github/actions/platformio-env
