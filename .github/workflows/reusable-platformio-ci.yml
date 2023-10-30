@@ -130,5 +130,5 @@ jobs:
         env:
           ROS_DISTRO: ${{ inputs.ros_distro }}
         run: |
-          cd firmware
+          cd ./repo/firmware
           pio run -e ${{ matrix.env }}
