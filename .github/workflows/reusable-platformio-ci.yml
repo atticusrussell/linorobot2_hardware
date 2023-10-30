@@ -129,6 +129,8 @@ jobs:
       - name: Build Firmware
         env:
           ROS_DISTRO: ${{ inputs.ros_distro }}
+        shell: bash
         run: |
-          cd ./repo/firmware
+          export PATH=$PATH:~/.platformio/penv/bin
+          cd repo/firmware
           pio run -e ${{ matrix.env }}
