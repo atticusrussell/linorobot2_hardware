@@ -47,10 +47,10 @@
 
 #define NR_OF_JOINTS 4
 #define BASE_FRAME_ID "base_link"
-#define MOTOR1_JOINT "front_left_wheel_joint"
-#define MOTOR2_JOINT "front_right_wheel_joint"
-#define MOTOR3_JOINT "rear_left_wheel_joint"
-#define MOTOR4_JOINT "rear_right_wheel_joint"
+#define MOTOR1_JOINT "front_left_wheel_joint_speed"
+#define MOTOR2_JOINT "front_right_wheel_joint_speed"
+#define MOTOR3_JOINT "rear_left_wheel_joint_speed"
+#define MOTOR4_JOINT "rear_right_wheel_joint_speed"
 #define JOINT_UPDATE_FREQ 50  // Control timer frequency in Hz (50Hz = 20ms)
 
 
